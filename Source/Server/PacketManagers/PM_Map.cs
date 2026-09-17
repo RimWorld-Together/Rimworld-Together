@@ -2,7 +2,10 @@
 using RTNetwork.PacketManagers;
 using RTNetwork.Packets;
 using RTServer.Core;
+using RTServer.Managers;
 using RTServer.Misc;
+using RTShared.Files;
+using RTShared.Files.Player;
 using RTShared.Misc;
 
 namespace RTServer.PacketManagers
@@ -17,27 +20,37 @@ namespace RTServer.PacketManagers
             SaveUserMap(client, data);
         }
 
-        public static void SaveUserMap(ServerClient client, PKT_Map data)
+        private static void SaveUserMap(ServerClient client, PKT_Map data)
         {
-            File.WriteAllBytes(Path.Combine(Master.MapsPath, data.Tile + CommonValues.DefaultSaveFormat), data.Bytes);
-            PM_Leaderboard.UpdateLeaderboard(client, data.Wealth);
-            InformationDisplayer.DisplaySaveMap(client);
+            FL_Settlement existingSettlement = PM_Settlements.GetSettlementFileFromTile(data.Tile);
+            
+            if (existingSettlement != null)
+            {
+                if (client.GetData<FL_Player>().Username == existingSettlement.Username) SaveMap();
+                else ResponseShortcutManager.SendIllegalPacket(client, "Attempted to save map without ownership!");
+            }
+            else SaveMap();
+            
+            void SaveMap()
+            {
+                File.WriteAllBytes(Path.Combine(Master.MapsPath, data.Tile + CommonValues.DefaultSaveFormat), data.Bytes);
+                PM_Leaderboard.UpdateLeaderboard(client, data.Wealth);
+                InformationDisplayer.DisplaySaveMap(client);   
+            }
         }
 
-        public static string[] GetAllMaps() { return Directory.GetFiles(Master.MapsPath); }
+        private static string[] GetAllMaps() { return Directory.GetFiles(Master.MapsPath); }
 
         public static bool CheckIfMapExists(int mapTileToCheck)
         {
             string toFind = GetAllMaps().FirstOrDefault(fetch => Path.GetFileNameWithoutExtension(fetch) == mapTileToCheck.ToString());
-            if (toFind != null) return true;
-            else return false;
+            return toFind != null;
         }
 
         public static byte[] GetMapFromTile(int mapTileToGet)
         {
             string path = Path.Combine(Master.MapsPath, mapTileToGet + CommonValues.DefaultSaveFormat);
-            if (File.Exists(path)) return File.ReadAllBytes(path);
-            else return null;
+            return File.Exists(path) ? File.ReadAllBytes(path) : null;
         }
     }
 }

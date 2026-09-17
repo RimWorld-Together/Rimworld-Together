@@ -136,16 +136,20 @@ namespace RTServer.PacketManagers
         public static List<FL_Settlement> GetAllSettlements()
         {
             List<FL_Settlement> settlementList = new List<FL_Settlement>();
-            string[] settlements = Directory.GetFiles(Master.SettlementsPath);
+            string[] settlementPaths = Directory.GetFiles(Master.SettlementsPath);
             
-            foreach (string settlement in settlements)
+            foreach (string path in settlementPaths)
             {
-                FL_Settlement file = Serializer.SerializeFromFile<FL_Settlement>(settlement);
-                FL_Player userFile = UserManagerH.GetUserFileFromName(file.Username);
+                try
+                {
+                    FL_Settlement file = Serializer.SerializeFromFile<FL_Settlement>(path);
+                    FL_Player userFile = UserManagerH.GetUserFileFromName(file.Username);
                 
-                file.IconID = userFile.Customizations.SettlementIconID;
-                file.IconColor = userFile.Customizations.SettlementIconColor;
-                settlementList.Add(file);
+                    file.IconID = userFile.Customizations.SettlementIconID;
+                    file.IconColor = userFile.Customizations.SettlementIconColor;
+                    settlementList.Add(file);
+                }
+                catch (Exception ex) { Printer.Error(ex); }
             }
 
             return settlementList;
