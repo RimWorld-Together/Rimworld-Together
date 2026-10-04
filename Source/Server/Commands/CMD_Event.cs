@@ -14,7 +14,7 @@ namespace RTServer.Commands
         public CMD_Event()
         {
             Prefix = "event";
-            Description = "Sends an event to the selecte player";
+            Description = "Sends an event to the selected player";
             ParameterCount = 2;
         }
 
