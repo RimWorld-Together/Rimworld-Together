@@ -26,6 +26,7 @@ namespace RTServer.PacketManagers.ServerBrowser
             telemetry.Description = Master.ServerConfig.Description;
             telemetry.DiscordURL = Master.ServerConfig.DiscordURL;
             telemetry.SteamWorkshopURL = Master.ServerConfig.SteamWorkshopURL;
+            telemetry.ImageURL = Master.ServerConfig.ServerImageURL;
             telemetry.Version = CommonValues.ExecutableVersion;
             telemetry.Endpoint = ServerIPV4;
             telemetry.Port = Master.ServerConfig.Port;

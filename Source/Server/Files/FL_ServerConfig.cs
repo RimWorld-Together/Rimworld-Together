@@ -13,6 +13,8 @@ namespace RTServer.Files
         public string DiscordURL { get; set; } = string.Empty;
 
         public string SteamWorkshopURL { get; set; } = string.Empty;
+        
+        public string ServerImageURL { get; set; } = string.Empty;
 
         public string IP { get; set; } = "0.0.0.0";
 
