@@ -413,3 +413,4 @@ Source/.vscode/*.*
 # Rimworld specific exclusions
 1.5/Assemblies
 1.6/Assemblies
+/Current/Assemblies
