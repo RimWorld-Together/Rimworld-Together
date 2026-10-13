@@ -6,6 +6,7 @@ using RTNetwork.Packets;
 using static RTNetwork.Packets.PKT_Event;
 using RTNetwork.Components;
 using RTServer.PacketManagers;
+using RTShared.Files.Default;
 
 namespace RTServer.Commands
 {

@@ -4,6 +4,7 @@ using RTNetwork.Packets;
 using RTServer.Hooks.TCPNetwork;
 using RTServer.Managers;
 using RTShared.Files;
+using RTShared.Files.Default;
 using RTShared.Misc;
 
 namespace RTServer.PacketManagers

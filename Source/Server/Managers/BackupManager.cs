@@ -4,6 +4,7 @@ using RTShared.Files;
 using RTShared.Misc;
 using System.IO.Compression;
 using RTServer.PacketManagers;
+using RTShared.Files.Default;
 using static RTShared.Misc.Printer;
 
 namespace RTServer.Managers

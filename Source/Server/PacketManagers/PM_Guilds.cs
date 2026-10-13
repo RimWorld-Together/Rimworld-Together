@@ -6,6 +6,7 @@ using RTServer.Hooks.TCPNetwork;
 using RTServer.Managers;
 using RTServer.Misc;
 using RTShared.Files;
+using RTShared.Files.Default;
 using RTShared.Files.Guilds;
 using RTShared.Files.Player;
 using RTShared.Misc;

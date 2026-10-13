@@ -1,6 +1,7 @@
 ﻿using RTServer.Files;
 using RTShared.Files;
 using RTShared.Files.Configs;
+using RTShared.Files.Default;
 using RTShared.Files.Marketplace;
 
 namespace RTServer.Core

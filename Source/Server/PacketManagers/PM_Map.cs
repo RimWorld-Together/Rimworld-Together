@@ -5,6 +5,7 @@ using RTServer.Core;
 using RTServer.Managers;
 using RTServer.Misc;
 using RTShared.Files;
+using RTShared.Files.Default;
 using RTShared.Files.Player;
 using RTShared.Misc;
 

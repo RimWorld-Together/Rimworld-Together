@@ -1,6 +1,7 @@
 ﻿using RTServer.PacketManagers;
 using RTShared.Commands;
 using RTShared.Files;
+using RTShared.Files.Default;
 using RTShared.Misc;
 
 namespace RTServer.Commands
