@@ -17,7 +17,7 @@ namespace RTServer.PacketManagers
         {
             PKT_World data = Serializer.ConvertBytesToObject<PKT_World>(bytes);
 
-            switch (data._stepMode)
+            switch (data.StepMode)
             {
                 case WorldStepMode.Sent:
                     ReceiveWorld(client, data);
@@ -30,14 +30,14 @@ namespace RTServer.PacketManagers
         public static void RequireWorldFile(ServerClient client)
         {
             PKT_World worldData = new PKT_World();
-            worldData._stepMode = WorldStepMode.AskFor;
+            worldData.StepMode = WorldStepMode.AskFor;
             client.Listener.EnqueuePacket(PacketHeader.World, worldData);
         }
 
         public static void SendWorld(ServerClient client)
         {
             PKT_World data = new PKT_World();
-            data._stepMode = WorldStepMode.Sent;
+            data.StepMode = WorldStepMode.Sent;
             data.File = Serializer.SerializeFromFile<FL_PlanetConfig>(FL_PlanetConfig.SavePath);
 
             client.Listener.EnqueuePacket(PacketHeader.World, data);

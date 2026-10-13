@@ -12,7 +12,7 @@ namespace RTServer.Managers
         public static void SendIllegalPacket(ServerClient client, string message = "", bool shouldBroadcast = true)
         {
             PKT_ResponseShortcut data = new PKT_ResponseShortcut();
-            data._stepMode = ResponseStepMode.IllegalAction;
+            data.StepMode = ResponseStepMode.IllegalAction;
 
             client.Listener.EnqueuePacket(PacketHeader.ResponseShortcut, data);
             client.Listener.MarkForDisconnect();
@@ -27,7 +27,7 @@ namespace RTServer.Managers
         public static void SendUserUnavailablePacket(ServerClient client)
         {
             PKT_ResponseShortcut data = new PKT_ResponseShortcut();
-            data._stepMode = ResponseStepMode.UserUnavailable;
+            data.StepMode = ResponseStepMode.UserUnavailable;
 
             client.Listener.EnqueuePacket(PacketHeader.ResponseShortcut, data);
         }
@@ -35,7 +35,7 @@ namespace RTServer.Managers
         public static void SendUnavailablePacket(ServerClient client)
         {
             PKT_ResponseShortcut data = new PKT_ResponseShortcut();
-            data._stepMode = ResponseStepMode.Unavailable;
+            data.StepMode = ResponseStepMode.Unavailable;
 
             client.Listener.EnqueuePacket(PacketHeader.ResponseShortcut, data);
         }
@@ -43,7 +43,7 @@ namespace RTServer.Managers
         public static void SendBreakPacket(ServerClient client)
         {
             PKT_ResponseShortcut data = new PKT_ResponseShortcut();
-            data._stepMode = ResponseStepMode.Pop;
+            data.StepMode = ResponseStepMode.Pop;
 
             client.Listener.EnqueuePacket(PacketHeader.ResponseShortcut, data);
         }
@@ -51,7 +51,7 @@ namespace RTServer.Managers
         public static void SendNoPowerPacket(ServerClient client)
         {
             PKT_ResponseShortcut data = new PKT_ResponseShortcut();
-            data._stepMode = ResponseStepMode.NoPower;
+            data.StepMode = ResponseStepMode.NoPower;
 
             client.Listener.EnqueuePacket(PacketHeader.ResponseShortcut, data);
         }

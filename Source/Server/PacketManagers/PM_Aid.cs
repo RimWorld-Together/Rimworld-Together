@@ -20,13 +20,13 @@ namespace RTServer.PacketManagers
 
             if (!FL_PlayerCooldown.CheckIfCanAid(client.GetData<FL_Player>(), Master.ActionConfigs.AidAction))
             {
-                data._stepMode = AidStepMode.Reject;
+                data.StepMode = AidStepMode.Reject;
                 client.Listener.EnqueuePacket(PacketHeader.Aid, data);
             }
 
             else
             {
-                switch (data._stepMode)
+                switch (data.StepMode)
                 {
                     case AidStepMode.Send:
                         SendAidRequest(client, data);
@@ -47,20 +47,20 @@ namespace RTServer.PacketManagers
 
         private static void SendAidRequest(ServerClient client, PKT_Aid data)
         {
-            if (!PM_Settlements.CheckIfTileIsInUse(data._toTile)) ResponseShortcutManager.SendIllegalPacket(client, $"Player {client.GetData<FL_Player>().Username} attempted to send an aid packet to settlement at tile {data._toTile}, but it has no settlement");
+            if (!PM_Settlements.CheckIfTileIsInUse(data.ToTile)) ResponseShortcutManager.SendIllegalPacket(client, $"Player {client.GetData<FL_Player>().Username} attempted to send an aid packet to settlement at tile {data.ToTile}, but it has no settlement");
             else
             {
-                FL_Settlement settlementFile = PM_Settlements.GetSettlementFileFromTile(data._toTile);
+                FL_Settlement settlementFile = PM_Settlements.GetSettlementFileFromTile(data.ToTile);
                 if (UserManagerH.CheckIfUserIsConnected(settlementFile.Username))
                 {
-                    data._stepMode = AidStepMode.Receive;
+                    data.StepMode = AidStepMode.Receive;
                     ServerClient target = ServerNetwork.GetConnectedClientFromUsername(settlementFile.Username);
                     target.Listener.EnqueuePacket(PacketHeader.Aid, data);
                 }
 
                 else
                 {
-                    data._stepMode = AidStepMode.Reject;
+                    data.StepMode = AidStepMode.Reject;
                     client.Listener.EnqueuePacket(PacketHeader.Aid, data);
                 }
             }
@@ -68,10 +68,10 @@ namespace RTServer.PacketManagers
 
         private static void SendAidAccept(ServerClient client, PKT_Aid data)
         {
-            if (!PM_Settlements.CheckIfTileIsInUse(data._fromTile)) ResponseShortcutManager.SendIllegalPacket(client, $"Player {client.GetData<FL_Player>().Username} attempted to send an aid packet to settlement at tile {data._fromTile}, but it has no settlement");
+            if (!PM_Settlements.CheckIfTileIsInUse(data.FromTile)) ResponseShortcutManager.SendIllegalPacket(client, $"Player {client.GetData<FL_Player>().Username} attempted to send an aid packet to settlement at tile {data.FromTile}, but it has no settlement");
             else
             {
-                FL_Settlement settlementFile = PM_Settlements.GetSettlementFileFromTile(data._fromTile);
+                FL_Settlement settlementFile = PM_Settlements.GetSettlementFileFromTile(data.FromTile);
                 if (UserManagerH.CheckIfUserIsConnected(settlementFile.Username))
                 {
                     ServerClient target = ServerNetwork.GetConnectedClientFromUsername(settlementFile.Username);
@@ -82,7 +82,7 @@ namespace RTServer.PacketManagers
 
                 else
                 {
-                    data._stepMode = AidStepMode.Reject;
+                    data.StepMode = AidStepMode.Reject;
                     client.Listener.EnqueuePacket(PacketHeader.Aid, data);
                 }
             }
@@ -90,10 +90,10 @@ namespace RTServer.PacketManagers
 
         private static void SendAidReject(ServerClient client, PKT_Aid data)
         {
-            if (!PM_Settlements.CheckIfTileIsInUse(data._fromTile)) ResponseShortcutManager.SendIllegalPacket(client, $"Player {client.GetData<FL_Player>().Username} attempted to send an aid packet to settlement at tile {data._fromTile}, but it has no settlement");
+            if (!PM_Settlements.CheckIfTileIsInUse(data.FromTile)) ResponseShortcutManager.SendIllegalPacket(client, $"Player {client.GetData<FL_Player>().Username} attempted to send an aid packet to settlement at tile {data.FromTile}, but it has no settlement");
             else
             {
-                FL_Settlement settlementFile = PM_Settlements.GetSettlementFileFromTile(data._fromTile);
+                FL_Settlement settlementFile = PM_Settlements.GetSettlementFileFromTile(data.FromTile);
                 if (UserManagerH.CheckIfUserIsConnected(settlementFile.Username))
                 {
                     ServerClient target = ServerNetwork.GetConnectedClientFromUsername(settlementFile.Username);

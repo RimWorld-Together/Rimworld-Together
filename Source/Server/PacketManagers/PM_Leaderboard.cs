@@ -27,7 +27,7 @@ namespace RTServer.PacketManagers
         private static void SendLeaderboard(ServerClient client)
         {
             PKT_Leaderboard data = new PKT_Leaderboard();
-            data._file = (FL_Leaderboard)FL_Leaderboard.Load<FL_Leaderboard>(FL_Leaderboard.SavePath);
+            data.File = (FL_Leaderboard)FL_Leaderboard.Load<FL_Leaderboard>(FL_Leaderboard.SavePath);
             client.Listener.EnqueuePacket(PacketHeader.Leaderboard, data);
         }
 

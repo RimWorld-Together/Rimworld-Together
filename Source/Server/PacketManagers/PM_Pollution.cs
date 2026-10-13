@@ -28,15 +28,15 @@ namespace RTServer.PacketManagers
         public static void AddPollutionToTile(PKT_Pollution data, ServerClient client)
         {
             bool isNewPollutedTile = false;
-            PollutionDetail toSearch = Master.WorldValues.PollutedTiles.FirstOrDefault(T => T.Tile == data._pollutionData.Tile);
+            PollutionDetail toSearch = Master.WorldValues.PollutedTiles.FirstOrDefault(T => T.Tile == data.Pollution.Tile);
             if (toSearch == null)
             {
                 toSearch = new PollutionDetail();
                 isNewPollutedTile = true;
             }
 
-            toSearch.Tile = data._pollutionData.Tile;
-            toSearch.Quantity += data._pollutionData.Quantity;
+            toSearch.Tile = data.Pollution.Tile;
+            toSearch.Quantity += data.Pollution.Quantity;
 
             if (isNewPollutedTile)
             {

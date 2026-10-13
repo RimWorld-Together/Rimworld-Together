@@ -21,18 +21,18 @@ namespace RTServer.PacketManagers
             {
                 PKT_Caravan data = Serializer.ConvertBytesToObject<PKT_Caravan>(bytes);
 
-                switch (data._stepMode)
+                switch (data.StepMode)
                 {
                     case CaravanStepMode.Add:
-                        AddCaravan(client, data._caravanFile);
+                        AddCaravan(client, data.CaravanFile);
                         break;
 
                     case CaravanStepMode.Remove:
-                        RemoveCaravan(client, data._caravanFile);
+                        RemoveCaravan(client, data.CaravanFile);
                         break;
 
                     case CaravanStepMode.Move:
-                        MoveCaravan(client, data._caravanFile);
+                        MoveCaravan(client, data.CaravanFile);
                         break;
                 }
 
@@ -43,8 +43,8 @@ namespace RTServer.PacketManagers
         private static void AddCaravan(ServerClient client, FL_Caravan file)
         {
             PKT_Caravan data = new PKT_Caravan();
-            data._stepMode = CaravanStepMode.Add;
-            data._caravanFile = file;
+            data.StepMode = CaravanStepMode.Add;
+            data.CaravanFile = file;
 
             ServerNetwork.SendPacketToAllClients(PacketHeader.Caravan, data, client);
         }
@@ -52,8 +52,8 @@ namespace RTServer.PacketManagers
         public static void RemoveCaravan(ServerClient client, FL_Caravan file)
         {
             PKT_Caravan data = new PKT_Caravan();
-            data._stepMode = CaravanStepMode.Remove;
-            data._caravanFile = file;
+            data.StepMode = CaravanStepMode.Remove;
+            data.CaravanFile = file;
 
             ServerNetwork.SendPacketToAllClients(PacketHeader.Caravan, data, client);
         }
@@ -61,8 +61,8 @@ namespace RTServer.PacketManagers
         private static void MoveCaravan(ServerClient client, FL_Caravan file)
         {
             PKT_Caravan data = new PKT_Caravan();
-            data._stepMode = CaravanStepMode.Move;
-            data._caravanFile = file;
+            data.StepMode = CaravanStepMode.Move;
+            data.CaravanFile = file;
 
             ServerNetwork.SendPacketToAllClients(PacketHeader.Caravan, data, client);
         }
