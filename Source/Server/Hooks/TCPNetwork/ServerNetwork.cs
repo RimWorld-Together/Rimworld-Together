@@ -53,7 +53,7 @@ namespace RTServer.Hooks.TCPNetwork
 
                 Task.Run(delegate { while (true) ListenForNewClients(); });
             }
-            catch (Exception e) { Printer.Error(e); }
+            catch (Exception ex) { Printer.Error(ex); }
         }
 
         private static void ListenForNewClients()

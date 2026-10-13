@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<WorldObjectDef Name="RTCaravan" ParentName="StaticWorldObjectBase">
+		<defName>RTCaravan</defName>
+		<label>Online Caravan</label>
+		<description>A caravan from another player</description>
+		<worldObjectClass>RTClient.WorldObjects.WO_Caravan</worldObjectClass>
+		<texture>World/WorldObjects/RTCaravan</texture>
+		<expandingIconTexture>World/WorldObjects/RTCaravan</expandingIconTexture>
+		<fullyExpandedInSpace>true</fullyExpandedInSpace>
+		<expandingIcon>true</expandingIcon>
+		<expandingIconPriority>10</expandingIconPriority>
+	</WorldObjectDef>
+</Defs>
