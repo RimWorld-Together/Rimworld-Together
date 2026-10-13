@@ -1,0 +1,12 @@
+<Defs>
+  <SitePartDef>
+    <defName>RTBase</defName>
+    <label>Production Site</label>
+    <description>A simple production site. Will generate materials every once in a while</description>
+    <workerClass>SitePartWorker_Outpost</workerClass>
+    <siteTexture>World/WorldObjects/DefaultSettlement</siteTexture>
+    <expandingIconTexture>Sites/Factory</expandingIconTexture>
+    <applyFactionColorToSiteTexture>true</applyFactionColorToSiteTexture>
+    <minThreatPoints>5000</minThreatPoints>
+  </SitePartDef>
+</Defs>
