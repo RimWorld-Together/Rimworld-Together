@@ -13,8 +13,7 @@ namespace RTServer.PacketManagers
         public override void Receive(ServerClient client, byte[] bytes, PacketHeader header)
         {
             PKT_Version packet = Serializer.ConvertBytesToObject<PKT_Version>(bytes);
-            Printer.Warning(packet.Version);
-            
+
             if (packet.Version == CommonValues.ExecutableVersion) client.Listener.EnqueuePacket(PacketHeader.Version, packet);
             else
             {

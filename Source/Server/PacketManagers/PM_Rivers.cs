@@ -23,11 +23,9 @@ namespace RTServer.PacketManagers
                 {
                     case PKT_River.StepMode.Add:
                         throw new NotImplementedException();
-                        break;
 
                     case PKT_River.StepMode.Remove:
                         throw new NotImplementedException();
-                        break;
                     
                     case PKT_River.StepMode.Bulk:
                         AddRiversBulk(client, data);
