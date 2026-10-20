@@ -4,6 +4,7 @@ using RTServer.Managers;
 using RTNetwork.Components;
 using RTNetwork.PacketManagers;
 using RTNetwork.Packets;
+using RTServer.Misc;
 using RTShared.Files;
 using RTShared.Files.Default;
 using RTShared.Files.Player;
@@ -48,7 +49,7 @@ namespace RTServer.PacketManagers
             {
                 Serializer.SerializeToFile(path, file);
                 if (packet != null) ServerNetwork.SendPacketToAllClients(PacketHeader.WorldObject, packet, client);
-                Printer.Warning($"WorldObject at '{file.Tile}' has been added", Printer.Verbosity.Verbose);
+                InformationDisplayer.DisplayAddWorldObject(packet.WorldObject.Tile.ToString());
             }
         }
 
@@ -60,7 +61,7 @@ namespace RTServer.PacketManagers
             {
                 File.Delete(path);
                 ServerNetwork.SendPacketToAllClients(PacketHeader.WorldObject, packet, client);
-                Printer.Warning($"WorldObject at '{packet.WorldObject.Tile}' has been removed", Printer.Verbosity.Verbose);
+                InformationDisplayer.DisplayRemoveWorldObject(packet.WorldObject.Tile.ToString());
             }
         }
 

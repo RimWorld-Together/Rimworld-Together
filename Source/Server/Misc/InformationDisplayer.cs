@@ -35,6 +35,10 @@ namespace RTServer.Misc
         public static void DisplayAddSite(string value) { Printer.Message($"[Add site] > {value}"); }
 
         public static void DisplayRemoveSite(string value) { Printer.Message($"[Remove site] > {value}"); }
+        
+        public static void DisplayAddWorldObject(string value) { Printer.Message($"[Add world object] > {value}"); }
+
+        public static void DisplayRemoveWorldObject(string value) { Printer.Message($"[Remove world object] > {value}"); }
 
         public static void DisplayAddGuild(string value) { Printer.Message($"[Add guild] > {value}"); }
 
