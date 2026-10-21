@@ -66,7 +66,7 @@ namespace RTServer.PacketManagers
                 //Check if missing required mods
                 foreach (FL_ModData config in Master.ModConfig.ModConfigs.Where(fetch => fetch.Type == FL_ModConfig.ModType.Required))
                 {
-                    FL_ModData toFind = file.ModConfigs.Find(fetch => fetch.ModName == config.ModName);
+                    FL_ModData toFind = file.ModConfigs.Find(fetch => fetch.ModID == config.ModID);
                     if (toFind == null)
                     {
                         isConflicting = true;
@@ -77,7 +77,7 @@ namespace RTServer.PacketManagers
                 //Check if has mods that aren't required or optional
                 foreach (FL_ModData config in file.ModConfigs)
                 {
-                    FL_ModData toFind = Master.ModConfig.ModConfigs.Find(fetch => fetch.ModName == config.ModName
+                    FL_ModData toFind = Master.ModConfig.ModConfigs.Find(fetch => fetch.ModID == config.ModID
                         && (fetch.Type == FL_ModConfig.ModType.Required || fetch.Type == FL_ModConfig.ModType.Optional));
 
                     if (toFind == null)
@@ -111,7 +111,7 @@ namespace RTServer.PacketManagers
             {
                 foreach (FL_ModData config in Master.ModConfig.ModConfigs.Where(fetch => fetch.Type == FL_ModConfig.ModType.Required))
                 {
-                    FL_ModData toFind = file.ModConfigs.FirstOrDefault(fetch => fetch.ModName == config.ModName);
+                    FL_ModData toFind = file.ModConfigs.FirstOrDefault(fetch => fetch.ModID == config.ModID);
                     
                     if (config.Settings == null) continue;
                     else if (toFind.Settings == null || config.Settings.Hash != toFind.Settings.Hash)
@@ -124,7 +124,7 @@ namespace RTServer.PacketManagers
                 
                 foreach (FL_ModData config in file.ModConfigs)
                 {
-                    FL_ModData toFind = Master.ModConfig.ModConfigs.Find(fetch => fetch.ModName == config.ModName);
+                    FL_ModData toFind = Master.ModConfig.ModConfigs.Find(fetch => fetch.ModID == config.ModID);
                     
                     if (toFind.Settings == null) continue;
                     else if (config.Settings == null || config.Settings.Hash != toFind.Settings.Hash)
