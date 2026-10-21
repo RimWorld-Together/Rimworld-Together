@@ -49,7 +49,7 @@ namespace RTServer.PacketManagers
             {
                 Serializer.SerializeToFile(path, file);
                 if (packet != null) ServerNetwork.SendPacketToAllClients(PacketHeader.WorldObject, packet, client);
-                InformationDisplayer.DisplayAddWorldObject(packet.WorldObject.Tile.ToString());
+                InformationDisplayer.DisplayAddWorldObject(file.Tile.ToString());
             }
         }
 
