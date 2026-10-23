@@ -80,6 +80,7 @@ namespace RTServer.Core
             ACT_Road.SavePath = Path.Combine(Master.ActionsPath, "Road.json");
             ACT_River.SavePath = Path.Combine(Master.ActionsPath, "River.json");
             ACT_Scenario.SavePath =  Path.Combine(Master.ActionsPath, "Scenario.json");
+            ACT_Rollback.SavePath =  Path.Combine(Master.ActionsPath, "Rollback.json");
 
             // Find a way to move these two to another place or merge with the above
             CommonValues.ServerUsersPath = Master.UsersPath;
@@ -204,6 +205,9 @@ namespace RTServer.Core
             
             Master.ActionConfigs.ScenarioAction = (ACT_Scenario)ACT_Scenario.Load<ACT_Scenario>(ACT_Scenario.SavePath);
             ACT_Scenario.Save(ACT_Scenario.SavePath, Master.ActionConfigs.ScenarioAction);
+            
+            Master.ActionConfigs.RollbackAction = (ACT_Rollback)ACT_Rollback.Load<ACT_Rollback>(ACT_Rollback.SavePath);
+            ACT_Rollback.Save(ACT_Rollback.SavePath, Master.ActionConfigs.RollbackAction);
         }
     }
 }
