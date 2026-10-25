@@ -9,7 +9,7 @@ namespace RTServer.Files
 
         public string Name { get; set; } = "RimWorld Together Server";
 
-        public string Description { get; set; } = string.Empty;
+        public string Description { get; set; } = "Welcome to our RimWorld Together server!";
 
         public string DiscordURL { get; set; } = string.Empty;
 
