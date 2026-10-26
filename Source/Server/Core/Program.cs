@@ -39,6 +39,7 @@ namespace RTServer.Core
             Printer.Title(Printer.SeparatorString, Verbosity.Extreme);
 
             ServerNetwork.StartFeature();
+			PasswordManager.CheckFormat();
             Task.Run(BackupManager.StartFeature);
             Task.Run(ServerBrowserManager.StartFeature);
 
