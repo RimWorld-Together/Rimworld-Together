@@ -6,7 +6,6 @@ using RTShared.Files.Player;
 
 namespace RTServer.Managers
 {
-
     public static class ResponseShortcutManager
     {
         public static void SendIllegalPacket(ServerClient client, string message = "", bool shouldBroadcast = true)
@@ -34,9 +33,7 @@ namespace RTServer.Managers
 
         public static void SendUnavailablePacket(ServerClient client)
         {
-            PKT_ResponseShortcut data = new PKT_ResponseShortcut();
-            data.StepMode = ResponseStepMode.Unavailable;
-
+            PKT_ResponseShortcut data = new PKT_ResponseShortcut() { StepMode = ResponseStepMode.Unavailable };
             client.Listener.EnqueuePacket(PacketHeader.ResponseShortcut, data);
         }
 

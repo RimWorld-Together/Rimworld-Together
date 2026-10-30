@@ -3,8 +3,6 @@ using RTNetwork.PacketManagers;
 using RTNetwork.Packets;
 using RTServer.Core;
 using RTServer.Files;
-using RTServer.Managers;
-using RTShared.Files.Player;
 using RTShared.Misc;
 
 namespace RTServer.PacketManagers

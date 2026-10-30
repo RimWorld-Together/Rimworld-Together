@@ -1,6 +1,5 @@
 ﻿using RTServer.Core;
 using RTServer.Hooks.TCPNetwork;
-using RTShared.Files.Configs;
 using RTNetwork.PacketManagers;
 using RTNetwork.Packets.ServerBrowser;
 using static RTServer.Managers.ServerBrowserManager;

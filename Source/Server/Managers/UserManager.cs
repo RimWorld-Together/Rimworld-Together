@@ -1,6 +1,5 @@
 ﻿using RTServer.Core;
 using RTNetwork.Packets;
-using RTShared.Files;
 using RTShared.Misc;
 using RTServer.Hooks.TCPNetwork;
 using static RTNetwork.Packets.PKT_Login;
@@ -71,24 +70,20 @@ namespace RTServer.Managers
 
         public static FL_Player GetUserFileFromName(string username)
         {
-            string[] userFiles = Directory.GetFiles(Master.UsersPath);
-
-            foreach (string userFile in userFiles)
-            {
-                FL_Player file = Serializer.SerializeFromFile<FL_Player>(userFile);
-                if (file.Username == username) return file;
-            }
-
-            return null;
+            IEnumerable<FL_Player> files = Directory.GetFiles(Master.UsersPath).Select(Serializer.SerializeFromFile<FL_Player>);
+            return files.FirstOrDefault(file => file.Username == username);
+        }
+        
+        public static FL_Player GetUserFileFromHash(string hash)
+        {
+            IEnumerable<FL_Player> files = Directory.GetFiles(Master.UsersPath).Select(Serializer.SerializeFromFile<FL_Player>);
+            return files.FirstOrDefault(file => file.Hash == hash);
         }
 
         public static FL_Player[] GetAllUserFiles()
         {
-            List<FL_Player> userFiles = new List<FL_Player>();
-
             string[] existingUsers = Directory.GetFiles(Master.UsersPath);
-            foreach (string user in existingUsers) userFiles.Add(Serializer.SerializeFromFile<FL_Player>(user));
-            return userFiles.ToArray();
+            return existingUsers.Select(Serializer.SerializeFromFile<FL_Player>).ToArray();
         }
 
         public static bool CheckIfUserIsConnected(string username)
@@ -113,7 +108,6 @@ namespace RTServer.Managers
             {
                 PM_Login.DenyConnectionWithReason(client, LoginResponse.Invalid);
                 return false;
-
             }
         }
 

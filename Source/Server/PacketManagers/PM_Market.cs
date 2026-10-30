@@ -4,6 +4,7 @@ using RTServer.Managers;
 using RTNetwork.Components;
 using RTNetwork.PacketManagers;
 using RTNetwork.Packets;
+using RTServer.Misc;
 using RTShared.Files.Marketplace;
 using RTShared.Files.Player;
 using RTShared.Misc;
@@ -53,8 +54,11 @@ namespace RTServer.PacketManagers
         private static void OnAsk(ServerClient client, PKT_Market packet)
         {
             packet.Entries = Master.MarketFile.Entries;
+            packet.ClientHash = client.GetData<FL_Player>().Hash;
             packet.Payment = client.GetData<FL_Player>().PendingMarketPayment;
             client.Listener.EnqueuePacket(PacketHeader.Market, packet);
+            
+            InformationDisplayer.DisplayRefreshEntry(client);
         }
 
         private static void OnAdd(ServerClient client, PKT_Market packet)
@@ -63,11 +67,13 @@ namespace RTServer.PacketManagers
             {
                 MarketEntry entry = packet.Entries[0];
                 entry.ThingCost = CalculateEntryPrice(entry);
-                entry.Owner = client.GetData<FL_Player>().Username;
+                entry.OwnerHash = client.GetData<FL_Player>().Hash;
                 entry.Identifier = Hasher.GetHashFromString($"{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}");
 
                 Master.MarketFile.AddEntry(packet.Entries[0]);
                 client.Listener.EnqueuePacket(PacketHeader.Market, packet);
+                InformationDisplayer.DisplayAddEntry(client);
+                
                 OnAsk(client, new PKT_Market() { CurrentStepMode = PKT_Market.StepMode.Ask });
             }
 
@@ -86,6 +92,8 @@ namespace RTServer.PacketManagers
             {
                 Master.MarketFile.RemoveEntry(toFind);
                 client.Listener.EnqueuePacket(PacketHeader.Market, packet);
+                InformationDisplayer.DisplayRemoveEntry(client);
+                
                 OnAsk(client, new PKT_Market() { CurrentStepMode = PKT_Market.StepMode.Ask });
             }
         }
@@ -100,6 +108,8 @@ namespace RTServer.PacketManagers
 
                 GiveMoneyToSeller(toFind);
                 client.Listener.EnqueuePacket(PacketHeader.Market, packet);
+                InformationDisplayer.DisplayBuyEntry(client);
+                
                 OnAsk(client, new PKT_Market() { CurrentStepMode = PKT_Market.StepMode.Ask });
             }
         }
@@ -109,6 +119,8 @@ namespace RTServer.PacketManagers
             packet.Payment = client.GetData<FL_Player>().PendingMarketPayment;
             client.Listener.EnqueuePacket(PacketHeader.Market, packet);
             client.GetData<FL_Player>().UpdatePayment(0);
+            
+            InformationDisplayer.DisplayPaymentEntry(client);
         }
 
         private static int CalculateEntryPrice(MarketEntry entry)
@@ -121,7 +133,7 @@ namespace RTServer.PacketManagers
         {
             int calculatedReturn = (int)(entry.ThingCost / (1 + (Master.ActionConfigs.MarketAction.PriceMultiplier * 2)));
 
-            ServerClient seller = ServerNetwork.GetConnectedClientFromUsername(entry.Owner);
+            ServerClient seller = ServerNetwork.GetConnectedClientFromHash(entry.OwnerHash);
             if (seller != null)
             {
                 seller.GetData<FL_Player>().UpdatePayment(seller.GetData<FL_Player>().PendingMarketPayment + calculatedReturn);
@@ -134,14 +146,14 @@ namespace RTServer.PacketManagers
 
             else
             {
-                FL_Player sellerFile = UserManagerH.GetUserFileFromName(entry.Owner);
+                FL_Player sellerFile = UserManagerH.GetUserFileFromHash(entry.OwnerHash);
                 if (sellerFile != null) sellerFile.UpdatePayment(sellerFile.PendingMarketPayment + calculatedReturn);
             }
         }
 
         private static bool CheckIfEnoughEntriesLeft(ServerClient client)
         {
-            return Master.MarketFile.Entries.Count(fetch => fetch.Owner == client.GetData<FL_Player>().Username) 
+            return Master.MarketFile.Entries.Count(fetch => fetch.OwnerHash == client.GetData<FL_Player>().Username) 
                 < Master.ActionConfigs.MarketAction.MaxEntriesPerPlayer;
         }
     }

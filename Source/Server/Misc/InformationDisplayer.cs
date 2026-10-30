@@ -69,5 +69,15 @@ namespace RTServer.Misc
         public static void DisplaySetDifficulty(string value) { Printer.Warning($"[Set difficulty] > {value}"); }
 
         public static void DisplayChangedCustomizations(string value) { Printer.Warning($"[Change customizations] > {value}"); }
+        
+        public static void DisplayAddEntry(ServerClient client) { Printer.Message($"[Add entry] > {client.GetData<FL_Player>().Username}"); }
+        
+        public static void DisplayRemoveEntry(ServerClient client) { Printer.Message($"[Remove entry] > {client.GetData<FL_Player>().Username}"); }
+        
+        public static void DisplayBuyEntry(ServerClient client) { Printer.Message($"[Buy entry] > {client.GetData<FL_Player>().Username}"); }
+        
+        public static void DisplayPaymentEntry(ServerClient client) { Printer.Message($"[Payment] > {client.GetData<FL_Player>().Username}"); }
+        
+        public static void DisplayRefreshEntry(ServerClient client) { Printer.Message($"[Refresh entry] > {client.GetData<FL_Player>().Username}", Printer.Verbosity.Verbose); }
     }
 }

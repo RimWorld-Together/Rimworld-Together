@@ -39,10 +39,10 @@ namespace RTServer.Hooks.TCPNetwork
         {
             try
             {
+                if (Master.ServerConfig.UseUPnP) { _ = new UPnP(); }
+                
                 Network.Ip = Master.ServerConfig.IP;
                 Network.Port = Master.ServerConfig.Port;
-
-                if (Master.ServerConfig.UseUPnP) { _ = new UPnP(); }
 
                 Network.ServerListener = new TcpListener(IPAddress.Parse(Network.Ip), Network.Port);
                 Network.ServerListener.Start();
@@ -98,6 +98,11 @@ namespace RTServer.Hooks.TCPNetwork
         public static ServerClient GetConnectedClientFromUsername(string username)
         {
             return GetConnectedClients().FirstOrDefault(fetch => fetch.GetData<FL_Player>().Username == username);
+        }
+        
+        public static ServerClient GetConnectedClientFromHash(string hash)
+        {
+            return GetConnectedClients().FirstOrDefault(fetch => fetch.GetData<FL_Player>().Hash == hash);
         }
 
         public static ServerClient GetClientFromID(int id) { return Network.ServerClients.Keys.First(fetch => fetch.ID == id); }

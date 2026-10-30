@@ -1,9 +1,6 @@
-﻿using RTServer.Core;
-using RTServer.Managers;
-using RTServer.PacketManagers;
+﻿using RTServer.PacketManagers;
 using RTShared.Commands;
 using RTShared.Misc;
-using RTShared.Files.Player;
 
 namespace RTServer.Commands
 {

@@ -1,6 +1,5 @@
 ﻿using RTServer.Core;
 using RTServer.Misc;
-using RTShared.Files;
 using RTShared.Misc;
 using System.IO.Compression;
 using RTServer.PacketManagers;

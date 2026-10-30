@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using RTNetwork.Components;
 using RTNetwork.PacketManagers;
 using RTNetwork.Packets;
@@ -30,29 +28,26 @@ namespace RTServer.PacketManagers
             else RegisterUser(client, packet);
         }
 
-        private static bool LoginUser(ServerClient client, PKT_Login data)
+        private static void LoginUser(ServerClient client, PKT_Login data)
         {
-            if (!UserManagerH.CheckIfUserAuthCorrect(client, data)) return false;
+            if (!UserManagerH.CheckIfUserAuthCorrect(client, data)) return;
 
             client.GetData<FL_Player>(FL_Player.LoadOrCreateUserFile(data.Username, data.Password));
-
             client.GetData<FL_Player>().UpdateIP(client.IP);
             
-            if (UserManagerH.CheckIfUserBanned(client)) return false;
+            if (UserManagerH.CheckIfUserBanned(client)) return;
 
-            if (PM_Mods.CheckIfModConflict(client, data.RunningMods)) return false;
+            if (PM_Mods.CheckIfModConflict(client, data.RunningMods)) return;
             
-            if (PM_Mods.CheckForModConfigs(client, data.RunningMods)) return false;
+            if (PM_Mods.CheckForModConfigs(client, data.RunningMods)) return;
             
-            if (PM_Mods.CheckForModOrder(client, data.RunningMods)) return false;
+            if (PM_Mods.CheckForModOrder(client, data.RunningMods)) return;
 
             RemoveOldClientSessions(client);
 
             InformationDisplayer.DisplayLogin(client);
 
             PostLogin(client);
-
-            return true;
         }
 
         private static void RegisterUser(ServerClient client, PKT_Login data)
