@@ -95,7 +95,7 @@ namespace RTServer.Managers
 
         public static bool CheckIfUserExists(PKT_Login data)
         {
-            FL_Player toFind = GetAllUserFiles().FirstOrDefault(fetch => fetch.Username.ToLower() == data.Username.ToLower());
+            FL_Player toFind = GetAllUserFiles().FirstOrDefault(fetch => fetch.Username == data.Username);
             return toFind != null;
         }
 
