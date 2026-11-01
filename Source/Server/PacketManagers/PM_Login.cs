@@ -24,7 +24,7 @@ namespace RTServer.PacketManagers
 
         public static void TryLogin(ServerClient client, PKT_Login packet)
         {
-            if (UserManagerH.CheckIfUserExists(client, packet)) LoginUser(client, packet);
+            if (UserManagerH.CheckIfUserExists(packet)) LoginUser(client, packet);
             else RegisterUser(client, packet);
         }
 
@@ -32,7 +32,7 @@ namespace RTServer.PacketManagers
         {
             if (!UserManagerH.CheckIfUserAuthCorrect(client, data)) return;
 
-            client.GetData<FL_Player>(FL_Player.LoadOrCreateUserFile(data.Username, data.Password));
+            client.GetData<FL_Player>(FL_Player.LoadOrCreateUserFile(data.Username, data.Password, data.SecretNumber));
             client.GetData<FL_Player>().UpdateIP(client.IP);
             
             if (UserManagerH.CheckIfUserBanned(client)) return;
@@ -52,7 +52,7 @@ namespace RTServer.PacketManagers
 
         private static void RegisterUser(ServerClient client, PKT_Login data)
         {
-            client.GetData<FL_Player>(FL_Player.LoadOrCreateUserFile(data.Username, data.Password));
+            client.GetData<FL_Player>(FL_Player.LoadOrCreateUserFile(data.Username, data.Password, data.SecretNumber));
 
             InformationDisplayer.DisplayRegister(client);
 

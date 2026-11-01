@@ -93,16 +93,17 @@ namespace RTServer.Managers
             else return false;
         }
 
-        public static bool CheckIfUserExists(ServerClient client, PKT_Login data)
+        public static bool CheckIfUserExists(PKT_Login data)
         {
             FL_Player toFind = GetAllUserFiles().FirstOrDefault(fetch => fetch.Username.ToLower() == data.Username.ToLower());
-            if (toFind != null) return true;
-            else return false;
+            return toFind != null;
         }
 
         public static bool CheckIfUserAuthCorrect(ServerClient client, PKT_Login data)
         {
-            FL_Player toFind = GetAllUserFiles().FirstOrDefault(fetch => fetch.Username == data.Username && fetch.Password == data.Password);
+            FL_Player toFind = GetAllUserFiles().FirstOrDefault(fetch => fetch.Username == data.Username && 
+                fetch.Password == data.Password && fetch.SecretNumber == data.SecretNumber);
+            
             if (toFind != null) return true;
             else
             {
