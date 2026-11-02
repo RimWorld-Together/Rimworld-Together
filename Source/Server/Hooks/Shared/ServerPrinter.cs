@@ -81,7 +81,7 @@ namespace RTServer.Hooks.Shared
             if (importance == Verbosity.Normal) return true;
             else if (importance == Verbosity.Verbose && Master.ServerConfig.Verbosity >= 1) return true;
             else if (importance == Verbosity.Extreme && Master.ServerConfig.Verbosity >= 2) return true;
-            else if (importance == Verbosity.Extreme && Master.ServerConfig.Verbosity >= 3) return true;
+            else if (importance == Verbosity.Ludicrous && Master.ServerConfig.Verbosity >= 3) return true;
             else return false;
         }
     }
