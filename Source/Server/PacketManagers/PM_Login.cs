@@ -24,18 +24,18 @@ namespace RTServer.PacketManagers
 
         public static void TryLogin(ServerClient client, PKT_Login packet)
         {
-            if (UserManagerH.CheckIfUserExists(packet)) LoginUser(client, packet);
+            if (UserManager.CheckIfUserExists(packet)) LoginUser(client, packet);
             else RegisterUser(client, packet);
         }
 
         private static void LoginUser(ServerClient client, PKT_Login data)
         {
-            if (!UserManagerH.CheckIfUserAuthCorrect(client, data)) return;
+            if (!UserManager.CheckIfUserAuthCorrect(client, data)) return;
 
             client.GetData<FL_Player>(FL_Player.LoadOrCreateUserFile(data.Username, data.Password, data.SecretNumber));
             client.GetData<FL_Player>().UpdateIP(client.IP);
             
-            if (UserManagerH.CheckIfUserBanned(client)) return;
+            if (UserManager.CheckIfUserBanned(client)) return;
 
             if (PM_Mods.CheckIfModConflict(client, data.RunningMods)) return;
             

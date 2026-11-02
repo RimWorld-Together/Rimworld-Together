@@ -16,7 +16,7 @@ namespace RTServer.Commands
 
         public override void Action() 
         {
-            FL_Player[] userFiles = UserManagerH.GetAllUserFiles().Where(x => x.IsBanned).ToArray();
+            FL_Player[] userFiles = UserManager.GetAllUserFiles().Where(x => x.IsBanned).ToArray();
 
             Printer.Title($"Banned players: [{userFiles.Count()}]");
             Printer.Title("----------------------------------------");

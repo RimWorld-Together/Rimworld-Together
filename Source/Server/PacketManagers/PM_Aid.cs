@@ -51,7 +51,7 @@ namespace RTServer.PacketManagers
             else
             {
                 FL_Settlement settlementFile = PM_Settlements.GetSettlementFileFromTile(data.ToTile);
-                if (UserManagerH.CheckIfUserIsConnected(settlementFile.Username))
+                if (UserManager.CheckIfUserIsConnected(settlementFile.Username))
                 {
                     data.StepMode = AidStepMode.Receive;
                     ServerClient target = ServerNetwork.GetConnectedClientFromUsername(settlementFile.Username);
@@ -72,7 +72,7 @@ namespace RTServer.PacketManagers
             else
             {
                 FL_Settlement settlementFile = PM_Settlements.GetSettlementFileFromTile(data.FromTile);
-                if (UserManagerH.CheckIfUserIsConnected(settlementFile.Username))
+                if (UserManager.CheckIfUserIsConnected(settlementFile.Username))
                 {
                     ServerClient target = ServerNetwork.GetConnectedClientFromUsername(settlementFile.Username);
                     target.Listener.EnqueuePacket(PacketHeader.Aid, data);
@@ -94,7 +94,7 @@ namespace RTServer.PacketManagers
             else
             {
                 FL_Settlement settlementFile = PM_Settlements.GetSettlementFileFromTile(data.FromTile);
-                if (UserManagerH.CheckIfUserIsConnected(settlementFile.Username))
+                if (UserManager.CheckIfUserIsConnected(settlementFile.Username))
                 {
                     ServerClient target = ServerNetwork.GetConnectedClientFromUsername(settlementFile.Username);
                     target.Listener.EnqueuePacket(PacketHeader.Aid, data);

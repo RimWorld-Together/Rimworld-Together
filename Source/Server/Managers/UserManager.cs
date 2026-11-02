@@ -22,7 +22,7 @@ namespace RTServer.Managers
 
         public static void BanPlayerFromName(string username)
         {
-            FL_Player userFile = UserManagerH.GetUserFileFromName(username);
+            FL_Player userFile = GetUserFileFromName(username);
             ServerClient client = ServerNetwork.GetConnectedClientFromUsername(username);
             if (userFile == null || client == null) Printer.Warning($"User '{CMD_Base.CommandParameters[0]}' was not found");
             else
@@ -39,7 +39,7 @@ namespace RTServer.Managers
 
         public static void PardonPlayerFromName(string username)
         {
-            FL_Player userFile = UserManagerH.GetUserFileFromName(username);
+            FL_Player userFile = GetUserFileFromName(username);
             if (userFile == null) Printer.Warning($"User '{CMD_Base.CommandParameters[0]}' was not found");
             else
             {
@@ -50,22 +50,6 @@ namespace RTServer.Managers
                     Printer.Warning($"User '{userFile.Username}' has been pardoned from the server");
                 }
             }
-        }
-    }
-
-    public static class UserManagerH
-    {
-        public static FL_Player GetUserFile(ServerClient client)
-        {
-            string[] userFiles = Directory.GetFiles(Master.UsersPath);
-
-            foreach (string userFile in userFiles)
-            {
-                FL_Player file = Serializer.SerializeFromFile<FL_Player>(userFile);
-                if (file.Username == client.GetData<FL_Player>().Username) return file;
-            }
-
-            return null;
         }
 
         public static FL_Player GetUserFileFromName(string username)

@@ -50,7 +50,7 @@ namespace RTServer.PacketManagers
             else
             {
                 FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(packet.ToTile);
-                if (!UserManagerH.CheckIfUserIsConnected(settlement.Username))
+                if (!UserManager.CheckIfUserIsConnected(settlement.Username))
                 {
                     packet.CurrentStepMode = StepMode.Recover;
                     client.Listener.EnqueuePacket(PacketHeader.Event, packet);

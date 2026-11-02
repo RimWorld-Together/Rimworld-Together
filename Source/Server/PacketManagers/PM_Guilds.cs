@@ -157,7 +157,7 @@ namespace RTServer.PacketManagers
         {
             FL_Guild guild = GuildManagerH.GetGuildFromName(client.GetData<FL_Player>().GuildName);
             FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(packet.DataInt);
-            FL_Player toRemoveOffline = UserManagerH.GetUserFileFromName(settlement.Username);
+            FL_Player toRemoveOffline = UserManager.GetUserFileFromName(settlement.Username);
             ServerClient toRemoveOnline = ServerNetwork.GetConnectedClientFromUsername(settlement.Username);
 
             GuildRanks userRank = GuildManagerH.GetMemberRank(guild, client.GetData<FL_Player>().Username);
@@ -203,7 +203,7 @@ namespace RTServer.PacketManagers
             if (rank == GuildRanks.Member) ResponseShortcutManager.SendNoPowerPacket(client);
             else
             {
-                FL_Player toPromoteOffline = UserManagerH.GetUserFileFromName(settlement.Username);
+                FL_Player toPromoteOffline = UserManager.GetUserFileFromName(settlement.Username);
                 if (GuildManagerH.GetMemberRank(guild, toPromoteOffline.Username) != GuildRanks.Member) ResponseShortcutManager.SendUnavailablePacket(client);
                 else
                 {
@@ -225,7 +225,7 @@ namespace RTServer.PacketManagers
             if (rank != GuildRanks.Admin) ResponseShortcutManager.SendNoPowerPacket(client);
             else
             {
-                FL_Player toDemoteOffline = UserManagerH.GetUserFileFromName(settlement.Username);
+                FL_Player toDemoteOffline = UserManager.GetUserFileFromName(settlement.Username);
                 if (GuildManagerH.GetMemberRank(guild, toDemoteOffline.Username) != GuildRanks.Moderator) ResponseShortcutManager.SendUnavailablePacket(client);
                 else
                 {
@@ -282,7 +282,7 @@ namespace RTServer.PacketManagers
 
         public static FL_Player[] GetUsersFromGuildMembers(FL_Guild file)
         {
-            return UserManagerH.GetAllUserFiles().Where(fetch => fetch.GuildName == file.Name).ToArray();
+            return UserManager.GetAllUserFiles().Where(fetch => fetch.GuildName == file.Name).ToArray();
         }
 
         public static bool CheckIfGuildExistsByName(string nameToCheck)

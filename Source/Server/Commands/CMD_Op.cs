@@ -19,7 +19,7 @@ namespace RTServer.Commands
 
         public override void Action()
         {
-            FL_Player toFind = UserManagerH.GetAllUserFiles().Where(x => x.Username == CMD_Base.CommandParameters[0]).FirstOrDefault();
+            FL_Player toFind = UserManager.GetAllUserFiles().Where(x => x.Username == CMD_Base.CommandParameters[0]).FirstOrDefault();
             if (toFind == null) Printer.Warning($"User '{CMD_Base.CommandParameters[0]}' was not found");
             else
             {

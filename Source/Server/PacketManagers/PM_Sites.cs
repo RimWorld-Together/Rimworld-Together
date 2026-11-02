@@ -180,7 +180,7 @@ namespace RTServer.PacketManagers
             foreach (string site in sites)
             {
                 FL_Site file = Serializer.SerializeFromFile<FL_Site>(site);
-                FL_Player userFile = UserManagerH.GetUserFileFromName(file.Username);
+                FL_Player userFile = UserManager.GetUserFileFromName(file.Username);
                     
                 file.IconColor = userFile.Customizations.SettlementIconColor;
                 sitesList.Add(file);

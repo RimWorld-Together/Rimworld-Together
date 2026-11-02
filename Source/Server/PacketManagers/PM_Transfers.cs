@@ -55,7 +55,7 @@ namespace RTServer.PacketManagers
             {
                 FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(packet.ToTile);
 
-                if (!UserManagerH.CheckIfUserIsConnected(settlement.Username)) 
+                if (!UserManager.CheckIfUserIsConnected(settlement.Username)) 
                 {
                     packet.CurrentStepMode = TransferStepMode.Recover;
                     client.Listener.EnqueuePacket(PacketHeader.Transfer, packet);
@@ -86,7 +86,7 @@ namespace RTServer.PacketManagers
             PKT_Transfer transferData = Serializer.ConvertBytesToObject<PKT_Transfer>(bytes);
 
             FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(transferData.FromTile);
-            if (!UserManagerH.CheckIfUserIsConnected(settlement.Username))
+            if (!UserManager.CheckIfUserIsConnected(settlement.Username))
             {
                 transferData.CurrentStepMode = TransferStepMode.Recover;
                 client.Listener.EnqueuePacket(PacketHeader.Transfer, transferData);
@@ -104,7 +104,7 @@ namespace RTServer.PacketManagers
             PKT_Transfer transferData = Serializer.ConvertBytesToObject<PKT_Transfer>(bytes);
 
             FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(transferData.ToTile);
-            if (!UserManagerH.CheckIfUserIsConnected(settlement.Username))
+            if (!UserManager.CheckIfUserIsConnected(settlement.Username))
             {
                 transferData.CurrentStepMode = TransferStepMode.TradeReReject;
                 client.Listener.EnqueuePacket(PacketHeader.Transfer, transferData);
@@ -123,7 +123,7 @@ namespace RTServer.PacketManagers
             PKT_Transfer transferData = Serializer.ConvertBytesToObject<PKT_Transfer>(bytes);
 
             FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(transferData.FromTile);
-            if (!UserManagerH.CheckIfUserIsConnected(settlement.Username))
+            if (!UserManager.CheckIfUserIsConnected(settlement.Username))
             {
                 transferData.CurrentStepMode = TransferStepMode.Recover;
                 client.Listener.EnqueuePacket(PacketHeader.Transfer, transferData);
@@ -141,7 +141,7 @@ namespace RTServer.PacketManagers
             PKT_Transfer transferData = Serializer.ConvertBytesToObject<PKT_Transfer>(bytes);
 
             FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(transferData.FromTile);
-            if (!UserManagerH.CheckIfUserIsConnected(settlement.Username))
+            if (!UserManager.CheckIfUserIsConnected(settlement.Username))
             {
                 transferData.CurrentStepMode = TransferStepMode.Recover;
                 client.Listener.EnqueuePacket(PacketHeader.Transfer, transferData);

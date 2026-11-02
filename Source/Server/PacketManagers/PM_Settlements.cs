@@ -143,7 +143,7 @@ namespace RTServer.PacketManagers
                 try
                 {
                     FL_Settlement file = Serializer.SerializeFromFile<FL_Settlement>(path);
-                    FL_Player userFile = UserManagerH.GetUserFileFromName(file.Username);
+                    FL_Player userFile = UserManager.GetUserFileFromName(file.Username);
                 
                     file.IconID = userFile.Customizations.SettlementIconID;
                     file.IconColor = userFile.Customizations.SettlementIconColor;

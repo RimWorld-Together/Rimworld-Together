@@ -15,7 +15,7 @@ namespace RTServer.Commands
 
         public override void Action() 
         {
-            FL_Player[] userFiles = UserManagerH.GetAllUserFiles();
+            FL_Player[] userFiles = UserManager.GetAllUserFiles();
 
             Printer.Title($"Server players: [{userFiles.Count()}]");
             Printer.Title("----------------------------------------");

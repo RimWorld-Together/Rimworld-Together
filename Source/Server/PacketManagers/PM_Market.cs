@@ -146,7 +146,7 @@ namespace RTServer.PacketManagers
 
             else
             {
-                FL_Player sellerFile = UserManagerH.GetUserFileFromHash(entry.OwnerHash);
+                FL_Player sellerFile = UserManager.GetUserFileFromHash(entry.OwnerHash);
                 if (sellerFile != null) sellerFile.UpdatePayment(sellerFile.PendingMarketPayment + calculatedReturn);
             }
         }
