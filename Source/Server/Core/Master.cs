@@ -11,6 +11,8 @@ namespace RTServer.Core
 
         public static string AssetsPath { get; set; } = Path.Combine(Master.MainPath, "Assets");
 
+        public static string MarketPath { get; set; } = Path.Combine(Master.AssetsPath, "Market");
+        
         public static string BackupsPath { get; set; } = Path.Combine(Master.MainPath, "Backups");
 
         public static string BackupServerPath { get; set; } = Path.Combine(Master.BackupsPath, "Servers");

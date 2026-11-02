@@ -58,10 +58,10 @@ namespace RTServer.Core
             FL_ChatConfig.SavePath = Path.Combine(Master.ConfigsPath, "ChatConfig.json");
             FL_IPBanConfig.SavePath = Path.Combine(Master.AssetsPath, "IPBans.json");
             FL_Leaderboard.SavePath = Path.Combine(Master.AssetsPath, "Leaderboard.json");
-            FL_Market.SavePath = Path.Combine(Master.AssetsPath, "Market.json");
             FL_Road.SavePath = Path.Combine(Master.AssetsPath, "Roads.json");
             FL_River.SavePath = Path.Combine(Master.AssetsPath, "Rivers.json");
             FL_Guild.SavePath = Path.Combine(Master.GuildsPath);
+            FL_Market.SavePath = Path.Combine(Master.MarketPath);
             
             // Actions
             ACT_WorldObject.SavePath = Path.Combine(Master.ActionsPath, "WorldObject.json");
@@ -90,6 +90,7 @@ namespace RTServer.Core
         {
             if (!Directory.Exists(Master.AssetsPath)) Directory.CreateDirectory(Master.AssetsPath);
             if (!Directory.Exists(Master.ConfigsPath)) Directory.CreateDirectory(Master.ConfigsPath);
+            if (!Directory.Exists(Master.MarketPath)) Directory.CreateDirectory(Master.MarketPath);
             if (!Directory.Exists(Master.ActionsPath)) Directory.CreateDirectory(Master.ActionsPath);
             if (!Directory.Exists(Master.LogsPath)) Directory.CreateDirectory(Master.LogsPath);
             if (!Directory.Exists(Master.SystemLogsPath)) Directory.CreateDirectory(Master.SystemLogsPath);
@@ -141,15 +142,14 @@ namespace RTServer.Core
 
             Master.LeaderboardFile = (FL_Leaderboard)FL_Leaderboard.Load<FL_Leaderboard>(FL_Leaderboard.SavePath);
             FL_Leaderboard.Save(FL_Leaderboard.SavePath, Master.LeaderboardFile);
-
-            Master.MarketFile = (FL_Market)FL_Market.Load<FL_Market>(FL_Market.SavePath);
-            FL_Market.Save(FL_Market.SavePath, Master.MarketFile);
             
             Master.RoadFile = (FL_Road)FL_Road.Load<FL_Road>(FL_Road.SavePath);
             FL_Road.Save(FL_Road.SavePath, Master.RoadFile);
             
             Master.RiverFile = (FL_River)FL_River.Load<FL_River>(FL_River.SavePath);
             FL_River.Save(FL_River.SavePath, Master.RiverFile);
+            
+            Master.MarketFile = FL_Market.LoadOrCreateMarket();
 
             // Don't automatically save this one
             // We require this file to be saved after a client upload
