@@ -98,6 +98,15 @@ namespace RTServer.PacketManagers
 
             InformationDisplayer.DisplaySaveGame(client);
             if (data.ForceDisconnect) client.Listener.MarkForDisconnect();
+            
+            //TODO
+            //Fix to remove legacy files
+            try
+            {
+                string pathToCheck = Path.Combine(Master.SavesPath, client.GetData<FL_Player>().Username + CommonValues.DefaultSaveFormat);
+                if (File.Exists(pathToCheck)) File.Delete(pathToCheck);
+            }
+            catch (Exception ex) { throw new Exception(ex.ToString()); }
         }
     }
 }
