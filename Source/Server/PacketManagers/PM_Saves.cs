@@ -33,12 +33,7 @@ namespace RTServer.PacketManagers
         public static bool CheckIfUserHasSave(ServerClient client)
         {
             string[] saves = Directory.GetFiles(Master.SavesPath);
-            foreach (string save in saves)
-            {
-                if (Path.GetFileNameWithoutExtension(save) == client.GetData<FL_Player>().Username) return true;
-            }
-
-            return false;
+            return saves.Any(save => Path.GetFileNameWithoutExtension(save) == client.GetData<FL_Player>().Hash);
         }
 
         private static void ResetClientSave(ServerClient client)
@@ -57,10 +52,11 @@ namespace RTServer.PacketManagers
         {
             BackupManager.BackupUser(username);
 
-            if (client != null) client.Listener.MarkForDisconnect();
+            // Disconnect client if connected
+            client?.Listener.MarkForDisconnect();
 
             // Delete save file
-            string path = Path.Combine(Master.SavesPath, username + CommonValues.DefaultSaveFormat);
+            string path = Path.Combine(Master.SavesPath, UserManager.GetUserFileFromName(username).Hash + CommonValues.DefaultSaveFormat);
             if (File.Exists(path)) File.Delete(path);
 
             // Delete site files
@@ -83,7 +79,7 @@ namespace RTServer.PacketManagers
 
         public static void SendSaveToClient(ServerClient client)
         {
-            string savePath = Path.Combine(Master.SavesPath, client.GetData<FL_Player>().Username + CommonValues.DefaultSaveFormat);
+            string savePath = Path.Combine(Master.SavesPath, client.GetData<FL_Player>().Hash + CommonValues.DefaultSaveFormat);
 
             PKT_Save data = new PKT_Save()
             {
@@ -97,7 +93,7 @@ namespace RTServer.PacketManagers
         
         private static void ReceiveSaveFromClient(ServerClient client, PKT_Save data)
         {
-            string savePath = Path.Combine(Master.SavesPath, client.GetData<FL_Player>().Username + CommonValues.DefaultSaveFormat);
+            string savePath = Path.Combine(Master.SavesPath, client.GetData<FL_Player>().Hash + CommonValues.DefaultSaveFormat);
             File.WriteAllBytes(savePath, data.FileBytes);
 
             InformationDisplayer.DisplaySaveGame(client);

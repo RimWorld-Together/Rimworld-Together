@@ -80,6 +80,8 @@ namespace RTServer.PacketManagers
             
             else
             {
+                packet.Guild.Hash = Hasher.GetHashFromString(packet.Guild.Name);
+                
                 packet.Guild.AddMember(new GuildMember()
                 {
                     Username = client.GetData<FL_Player>().Username,
@@ -247,16 +249,9 @@ namespace RTServer.PacketManagers
 
     public class GuildManagerH
     {
-        public static FL_Guild[] GetAllGuilds()
-        {
-            List<FL_Guild> files = new List<FL_Guild>();
+        private static FL_Guild[] GetAllGuilds() { return Directory.GetFiles(Master.GuildsPath).Select(Serializer.SerializeFromFile<FL_Guild>).ToArray(); }
 
-            foreach (string file in Directory.GetFiles(Master.GuildsPath)) files.Add(Serializer.SerializeFromFile<FL_Guild>(file));
-
-            return files.ToArray();
-        }
-
-        public static FL_Guild GetGuildFromName(string name) { return GetAllGuilds().FirstOrDefault(fetch => fetch.Name == name); }
+        public static FL_Guild GetGuildFromName(string name) { return GetAllGuilds().FirstOrDefault(fetch => fetch.Hash == Hasher.GetHashFromString(name)); }
 
         public static GuildMember[] GetAllGuildMembers(FL_Guild file) { return file.GuildMembers.ToArray(); }
 

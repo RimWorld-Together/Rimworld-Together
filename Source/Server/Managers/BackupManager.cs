@@ -46,7 +46,7 @@ namespace RTServer.Managers
 
             try
             {
-                string playerArchivedSavePath = Path.Combine(Master.BackupUsersPath, username);
+                string playerArchivedSavePath = Path.Combine(Master.BackupUsersPath, UserManager.GetUserFileFromName(username).Hash);
                 if (persistent) playerArchivedSavePath += " - persistent";
                 playerArchivedSavePath += CommonValues.CompressedSaveFormat;
 
@@ -68,10 +68,10 @@ namespace RTServer.Managers
 
                 List<string> toArchive = new List<string>();
 
-                string userFilePath = Path.Combine(Master.UsersPath, username + CommonValues.DefaultSaveFormat);
+                string userFilePath = Path.Combine(Master.UsersPath, UserManager.GetUserFileFromName(username).Hash + CommonValues.DefaultSaveFormat);
                 if (File.Exists(userFilePath)) toArchive.Add(userFilePath);
 
-                string userSavePath = Path.Combine(Master.SavesPath, username + CommonValues.DefaultSaveFormat);
+                string userSavePath = Path.Combine(Master.SavesPath, UserManager.GetUserFileFromName(username).Hash + CommonValues.DefaultSaveFormat);
                 if (File.Exists(userSavePath)) toArchive.Add(userSavePath);
 
                 FL_Site[] playerSites = PM_Sites.GetAllSitesFromUsername(username);
