@@ -42,7 +42,7 @@ namespace RTServer.PacketManagers
 
         private static void AddWorldObject(ServerClient client, PKT_WorldObject packet, FL_WorldObject file)
         {
-            string path = Path.Combine(Master.WorldObjectsPath, file.Tile + ".json");
+            string path = Path.Combine(Master.WorldObjectsPath, file.Tile + CommonValues.DefaultSaveFormat);
             if (File.Exists(path)) ResponseShortcutManager.SendIllegalPacket(client);
             else
             {
@@ -54,7 +54,7 @@ namespace RTServer.PacketManagers
 
         private static void RemoveWorldObject(ServerClient client, PKT_WorldObject packet)
         {
-            string path = Path.Combine(Master.WorldObjectsPath, packet.WorldObject.Tile + ".json");
+            string path = Path.Combine(Master.WorldObjectsPath, packet.WorldObject.Tile + CommonValues.DefaultSaveFormat);
             if (!File.Exists(path)) ResponseShortcutManager.SendIllegalPacket(client);
             else
             {
