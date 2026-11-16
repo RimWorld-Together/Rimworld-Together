@@ -30,7 +30,7 @@ namespace RTServer.PacketManagers
             }
         }
 
-        public static void AddSettlement(ServerClient client, PKT_PlayerSettlement packet)
+        private static void AddSettlement(ServerClient client, PKT_PlayerSettlement packet)
         {
             if (CheckIfTileIsInUse(packet.File.Tile)) ResponseShortcutManager.SendIllegalPacket(client, $"Player {client.GetData<FL_Player>().Username} attempted to add a settlement at tile {packet.File.Tile}, but that tile already has a settlement");
             else
@@ -55,87 +55,54 @@ namespace RTServer.PacketManagers
             }
         }
 
-        public static void RemoveSettlement(ServerClient client, PKT_PlayerSettlement settlementData)
+        public static void RemoveSettlement(ServerClient client, PKT_PlayerSettlement packet)
         {
-            if (!CheckIfTileIsInUse(settlementData.File.Tile)) ResponseShortcutManager.SendIllegalPacket(client, $"Settlement at tile {settlementData.File.Tile} was attempted to be removed, but the tile doesn't contain a settlement");
-
-            FL_Settlement settlementFile = GetSettlementFileFromTile(settlementData.File.Tile);
-
-            if (client != null)
-            {
-                if (settlementFile.Username != client.GetData<FL_Player>().Username)
-                {
-                    ResponseShortcutManager.SendIllegalPacket(client, $"Settlement at tile {settlementData.File.Tile} attempted to be removed by " +
-                        $"{client.GetData<FL_Player>().Username}, but {settlementFile.Username} owns the settlement");
-                }
-
-                else
-                {
-                    Delete();
-                    SendRemovalSignal();
-                }
-            }
-
+            FL_Settlement settlementFile = GetSettlementFileFromTile(packet.File.Tile);
+            
+            //Keep this here in case any mod tries to do some funky settlement removal patch
+            if (!CheckIfTileIsInUse(packet.File.Tile)) return;
             else
             {
-                Delete();
-                SendRemovalSignal();
+                //In case we're removing the settlement from a command, and we don't have a client
+                if (client == null) DeleteAndSend();
+                else
+                {
+                    if (settlementFile.Username == client.GetData<FL_Player>().Username) DeleteAndSend();
+                    else ResponseShortcutManager.SendIllegalPacket(client, $"'{client.GetData<FL_Player>().Username}' attempted to remove non-owned settlement");
+                }
             }
 
-            void Delete()
+            void DeleteAndSend()
             {
                 File.Delete(Path.Combine(Master.SettlementsPath, settlementFile.Tile + CommonValues.DefaultSaveFormat));
-
                 InformationDisplayer.DisplayRemoveSettlement(settlementFile.Tile.ToString());
-            }
-
-            void SendRemovalSignal()
-            {
-                settlementData.StepMode = PKT_PlayerSettlement.SettlementStepMode.Remove;
-
-                ServerNetwork.SendPacketToAllClients(PacketHeader.Settlement, settlementData, client);
+                
+                packet.StepMode = PKT_PlayerSettlement.SettlementStepMode.Remove;
+                ServerNetwork.SendPacketToAllClients(PacketHeader.Settlement, packet, client);
             }
         }
 
-        public static bool CheckIfTileIsInUse(int tileToCheck)
+        public static bool CheckIfTileIsInUse(int tile)
         {
             string[] settlements = Directory.GetFiles(Master.SettlementsPath);
-            foreach (string settlement in settlements)
-            {
-                FL_Settlement settlementJSON = Serializer.SerializeFromFile<FL_Settlement>(settlement);
-                if (settlementJSON.Tile == tileToCheck) return true;
-            }
-
-            return false;
+            return settlements.Select(Serializer.SerializeFromFile<FL_Settlement>).Any(settlement => settlement.Tile == tile);
         }
 
-        public static FL_Settlement GetSettlementFileFromTile(int tileToGet)
+        public static FL_Settlement GetSettlementFileFromTile(int tile)
         {
             string[] settlements = Directory.GetFiles(Master.SettlementsPath);
-            foreach (string settlement in settlements)
-            {
-                FL_Settlement settlementFile = Serializer.SerializeFromFile<FL_Settlement>(settlement);
-                if (settlementFile.Tile == tileToGet) return settlementFile;
-            }
-
-            return null;
+            return settlements.Select(Serializer.SerializeFromFile<FL_Settlement>).FirstOrDefault(settlement => settlement.Tile == tile);
         }
 
-        public static FL_Settlement GetSettlementFileFromUsername(string usernameToGet)
+        public static FL_Settlement GetSettlementFileFromUsername(string username)
         {
             string[] settlements = Directory.GetFiles(Master.SettlementsPath);
-            foreach (string settlement in settlements)
-            {
-                FL_Settlement settlementFile = Serializer.SerializeFromFile<FL_Settlement>(settlement);
-                if (settlementFile.Username == usernameToGet) return settlementFile;
-            }
-
-            return null;
+            return settlements.Select(Serializer.SerializeFromFile<FL_Settlement>).FirstOrDefault(settlement => settlement.Username == username);
         }
 
         public static List<FL_Settlement> GetAllSettlements()
         {
-            List<FL_Settlement> settlementList = new List<FL_Settlement>();
+            List<FL_Settlement> settlementList = [];
             string[] settlementPaths = Directory.GetFiles(Master.SettlementsPath);
             
             foreach (string path in settlementPaths)
@@ -157,7 +124,7 @@ namespace RTServer.PacketManagers
 
         public static FL_Settlement[] GetAllSettlementsFromUsername(string username)
         {
-            List<FL_Settlement> settlementList = new List<FL_Settlement>();
+            List<FL_Settlement> settlementList = [];
 
             foreach (FL_Settlement settlement in PM_Settlements.GetAllSettlements())
             {
