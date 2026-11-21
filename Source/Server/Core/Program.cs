@@ -111,9 +111,6 @@ namespace RTServer.Core
         private static void LoadFiles()
         {
             Master.ServerConfig = (FL_ServerConfig)FL_ServerConfig.Load<FL_ServerConfig>(FL_ServerConfig.SavePath);
-            if (CommonValues.ExecutableVersion == "dev") Master.ServerConfig.EnableServerTelemetry = true;
-            if (CommonValues.ExecutableVersion == "dev") Master.ServerConfig.EnableServerBrowser = true;
-            if (CommonValues.ExecutableVersion == "dev") Master.ServerConfig.UseClientSave = false;
             FL_ServerConfig.Save(FL_ServerConfig.SavePath, Master.ServerConfig);
 
             Master.PasswordConfig = (FL_PasswordConfig)FL_PasswordConfig.Load<FL_PasswordConfig>(FL_PasswordConfig.SavePath);
