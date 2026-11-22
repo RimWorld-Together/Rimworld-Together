@@ -78,7 +78,7 @@ namespace RTServer.PacketManagers
 
                 siteFile.Tile = siteData.File.Tile;
                 siteFile.Username = client.GetData<FL_Player>().Username;
-                if (!string.IsNullOrEmpty(client.GetData<FL_Player>().GuildName)) siteFile.GuildName = client.GetData<FL_Player>().GuildName;
+                if (!string.IsNullOrEmpty(client.GetData<FL_Player>().GuildHash)) siteFile.GuildHash = client.GetData<FL_Player>().GuildHash;
                 ConfirmNewSite(client, siteFile);
             }
         }
@@ -154,7 +154,7 @@ namespace RTServer.PacketManagers
         private static List<FL_Site> GetPlayerRewardableSites(ServerClient client)
         {
             return GetAllSites().Where(fetch => (fetch.Username == client.GetData<FL_Player>().Username ||
-                (client.GetData<FL_Player>().GuildName != null && client.GetData<FL_Player>().GuildName == fetch.GuildName)) &&
+                (client.GetData<FL_Player>().GuildHash != null && client.GetData<FL_Player>().GuildHash == fetch.GuildHash)) &&
                     !string.IsNullOrEmpty(fetch.WorkerString)).ToList();
         }
 

@@ -32,7 +32,7 @@ namespace RTServer.Hooks.TCPNetwork
                 if (client.GetData<FL_Player>() != null) InformationDisplayer.DisplayLogOut(client);
                 if (Master.ChatConfig.DisconnectNotifications) PM_Chat.BroadcastServerNotification($"{client.GetData<FL_Player>().Username} has left the server!");
             }
-            catch (Exception ex) { Printer.Error(ex); }
+            catch (Exception ex) { Printer.Error(ex, Printer.Verbosity.Verbose); }
         };
 
         public static void StartFeature()
@@ -53,7 +53,7 @@ namespace RTServer.Hooks.TCPNetwork
 
                 Task.Run(delegate { while (true) ListenForNewClients(); });
             }
-            catch (Exception e) { Printer.Error(e); }
+            catch (Exception ex) { Printer.Error(ex, Printer.Verbosity.Verbose); }
         }
 
         private static void ListenForNewClients()

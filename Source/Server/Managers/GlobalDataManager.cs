@@ -13,7 +13,7 @@ namespace RTServer.Managers
         {
             PKT_ServerGlobalData globalData = new PKT_ServerGlobalData();
             globalData.IsAdmin = client.GetData<FL_Player>().IsAdmin;
-            globalData.IsGuildMember = GuildManagerH.GetGuildFromName(client.GetData<FL_Player>().GuildName) != null;
+            globalData.IsGuildMember = GuildManagerH.GetGuildFromHash(client.GetData<FL_Player>().GuildHash) != null;
             globalData.ActionValues = Master.ActionConfigs;
             globalData.RoadValues = Master.ActionConfigs.RoadAction.RoadValues;
             globalData.WorldObjects = PM_WorldObject.GetAllWorldObjects();

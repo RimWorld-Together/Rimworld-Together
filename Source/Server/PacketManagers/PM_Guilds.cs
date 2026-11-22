@@ -100,7 +100,7 @@ namespace RTServer.PacketManagers
 
         private static void Delete(ServerClient client, PKT_PlayerGuild packet)
         {
-            FL_Guild guild = GuildManagerH.GetGuildFromName(client.GetData<FL_Player>().GuildName);
+            FL_Guild guild = GuildManagerH.GetGuildFromHash(client.GetData<FL_Player>().GuildHash);
 
             if (GuildManagerH.GetMemberRank(guild, client.GetData<FL_Player>().Username) != GuildRanks.Admin) ResponseShortcutManager.SendNoPowerPacket(client);
             else
@@ -124,12 +124,12 @@ namespace RTServer.PacketManagers
 
         private static void InviteMember(ServerClient client, PKT_PlayerGuild packet)
         {
-            FL_Guild guild = GuildManagerH.GetGuildFromName(client.GetData<FL_Player>().GuildName);
+            FL_Guild guild = GuildManagerH.GetGuildFromHash(client.GetData<FL_Player>().GuildHash);
             FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(packet.DataInt);
             ServerClient toAdd = ServerNetwork.GetConnectedClientFromUsername(settlement.Username);
 
             if (toAdd == null) ResponseShortcutManager.SendUnavailablePacket(client);
-            else if (toAdd.GetData<FL_Player>().GuildName != null) ResponseShortcutManager.SendUnavailablePacket(client);
+            else if (toAdd.GetData<FL_Player>().GuildHash != null) ResponseShortcutManager.SendUnavailablePacket(client);
             else if (GuildManagerH.GetMemberRank(guild, client.GetData<FL_Player>().Username) == GuildRanks.Member) ResponseShortcutManager.SendNoPowerPacket(client);
             else
             {
@@ -140,7 +140,7 @@ namespace RTServer.PacketManagers
 
         private static void AddMember(ServerClient client, PKT_PlayerGuild packet)
         {
-            FL_Guild guild = GuildManagerH.GetGuildFromName(packet.Guild.Name);
+            FL_Guild guild = GuildManagerH.GetGuildFromHash(packet.Guild.Hash);
 
             if (!GuildManagerH.CheckIfUserIsInGuild(guild, client.GetData<FL_Player>().Username))
             {
@@ -157,7 +157,7 @@ namespace RTServer.PacketManagers
 
         private static void RemoveMember(ServerClient client, PKT_PlayerGuild packet)
         {
-            FL_Guild guild = GuildManagerH.GetGuildFromName(client.GetData<FL_Player>().GuildName);
+            FL_Guild guild = GuildManagerH.GetGuildFromHash(client.GetData<FL_Player>().GuildHash);
             FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(packet.DataInt);
             FL_Player toRemoveOffline = UserManager.GetUserFileFromName(settlement.Username);
             ServerClient toRemoveOnline = ServerNetwork.GetConnectedClientFromUsername(settlement.Username);
@@ -199,7 +199,7 @@ namespace RTServer.PacketManagers
         private static void PromoteMember(ServerClient client, PKT_PlayerGuild packet)
         {
             FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(packet.DataInt);
-            FL_Guild guild = GuildManagerH.GetGuildFromName(client.GetData<FL_Player>().GuildName);
+            FL_Guild guild = GuildManagerH.GetGuildFromHash(client.GetData<FL_Player>().GuildHash);
 
             GuildRanks rank = GuildManagerH.GetMemberRank(guild, client.GetData<FL_Player>().Username);
             if (rank == GuildRanks.Member) ResponseShortcutManager.SendNoPowerPacket(client);
@@ -221,7 +221,7 @@ namespace RTServer.PacketManagers
         private static void DemoteMember(ServerClient client, PKT_PlayerGuild packet)
         {
             FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(packet.DataInt);
-            FL_Guild guild = GuildManagerH.GetGuildFromName(client.GetData<FL_Player>().GuildName);
+            FL_Guild guild = GuildManagerH.GetGuildFromHash(client.GetData<FL_Player>().GuildHash);
 
             GuildRanks rank = GuildManagerH.GetMemberRank(guild, client.GetData<FL_Player>().Username);
             if (rank != GuildRanks.Admin) ResponseShortcutManager.SendNoPowerPacket(client);
@@ -242,7 +242,7 @@ namespace RTServer.PacketManagers
 
         private static void SendGuildInformation(ServerClient client, PKT_PlayerGuild packet)
         {
-            packet.Guild = GuildManagerH.GetGuildFromName(client.GetData<FL_Player>().GuildName);
+            packet.Guild = GuildManagerH.GetGuildFromHash(client.GetData<FL_Player>().GuildHash);
             client.Listener.EnqueuePacket(PacketHeader.Guild, packet);
         }
     }
@@ -251,7 +251,7 @@ namespace RTServer.PacketManagers
     {
         private static FL_Guild[] GetAllGuilds() { return Directory.GetFiles(Master.GuildsPath).Select(Serializer.SerializeFromFile<FL_Guild>).ToArray(); }
 
-        public static FL_Guild GetGuildFromName(string name) { return GetAllGuilds().FirstOrDefault(fetch => fetch.Hash == Hasher.GetHashFromString(name)); }
+        public static FL_Guild GetGuildFromHash(string hash) { return GetAllGuilds().FirstOrDefault(fetch => fetch.Hash == hash); }
 
         public static GuildMember[] GetAllGuildMembers(FL_Guild file) { return file.GuildMembers.ToArray(); }
 
@@ -267,17 +267,17 @@ namespace RTServer.PacketManagers
 
         public static FL_Site[] GetGuildSites(FL_Guild file)
         {
-            return PM_Sites.GetAllSites().Where(fetch => fetch.GuildName == file.Name).ToArray();
+            return PM_Sites.GetAllSites().Where(fetch => fetch.GuildHash == file.Hash).ToArray();
         }
 
         public static ServerClient[] GetConnectedGuildMembers(FL_Guild file)
         {
-            return ServerNetwork.GetConnectedClients().Where(fetch => fetch.GetData<FL_Player>().GuildName == file.Name).ToArray();
+            return ServerNetwork.GetConnectedClients().Where(fetch => fetch.GetData<FL_Player>().GuildHash == file.Hash).ToArray();
         }
 
         public static FL_Player[] GetUsersFromGuildMembers(FL_Guild file)
         {
-            return UserManager.GetAllUserFiles().Where(fetch => fetch.GuildName == file.Name).ToArray();
+            return UserManager.GetAllUserFiles().Where(fetch => fetch.GuildHash == file.Hash).ToArray();
         }
 
         public static bool CheckIfGuildExistsByName(string nameToCheck)
