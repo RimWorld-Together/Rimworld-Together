@@ -39,10 +39,9 @@ namespace RTServer.Hooks.TCPNetwork
         {
             try
             {
-                if (Master.ServerConfig.UseUPnP) { _ = new UPnP(); }
-                
                 Network.Ip = Master.ServerConfig.IP;
                 Network.Port = Master.ServerConfig.Port;
+                if (Master.ServerConfig.UseUPnP) { _ = new UPnP(); }
 
                 Network.ServerListener = new TcpListener(IPAddress.Parse(Network.Ip), Network.Port);
                 Network.ServerListener.Start();

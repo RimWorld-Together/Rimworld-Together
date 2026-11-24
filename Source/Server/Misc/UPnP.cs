@@ -4,46 +4,30 @@ using RTNetwork.Components;
 
 namespace RTServer.Misc
 {
-    //Class that handles UPnP forwarding between the server and the router
-
     public class UPnP
     {
-        //Useful variables
-
-        public bool AutoPortForwardSuccessful;
+        private bool WasSuccessful { get; set; } = false;
 
         public UPnP()
         {
             Printer.Warning($"[UPnP] > Attempting to forward port '{Network.Port}'");
-
             NatUtility.DeviceFound += DeviceFound;
-
             TryToMapPort();
         }
-
-        //Function that acts as a clock to check if UPnP was forwarded correctly
-
-        public void TryToMapPort()
+        
+        private void TryToMapPort()
         {
             NatUtility.StartDiscovery();
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 10; i++)
             {
-                Thread.Sleep(250);
-                if (AutoPortForwardSuccessful) break;
+                Thread.Sleep(1000);
+                if (WasSuccessful) break;
             }
 
-            if (!AutoPortForwardSuccessful)
-            {
-                Printer.Error("Could not enable UPnP - Possible causes:\n" +
-                    "- the port is being used\n" +
-                    "- the router has UPnP disabled\n" +
-                    "- the router/modem does not have ports available");
-            }
+            if (!WasSuccessful) Printer.Error("Could not enable UPnP! Please check your network configuration");
         }
-
-        //Trigger that executes whenever a device for UPnP was found
-
+        
         private void DeviceFound(object sender, DeviceEventArgs args)
         {
             try
@@ -51,13 +35,13 @@ namespace RTServer.Misc
                 INatDevice device = args.Device;
                 device.CreatePortMap(new Mapping(Protocol.Tcp, Network.Port, Network.Port));
 
-                //This line can run multiple times if you are connected to multiple devices (Theres no reason for that, so only print it once)
-                if (!AutoPortForwardSuccessful) Printer.Warning("successfully portforwarded the server");
-                AutoPortForwardSuccessful = true;
+                //This line can run multiple times if you are connected to multiple devices (There's no reason for that, so only print it once)
+                if (!WasSuccessful) Printer.Warning("Successfully port-forwarded the server");
+                WasSuccessful = true;
 
                 Printer.Warning("UPnP forward successful");
             }
-            catch (Exception e) { Printer.Error(e.ToString()); }
+            catch (Exception ex) { Printer.Error(ex.ToString()); }
         }
     }
 }
