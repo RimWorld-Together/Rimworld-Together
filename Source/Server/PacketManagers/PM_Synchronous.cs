@@ -14,89 +14,85 @@ namespace RTServer.PacketManagers
         [HandlesPacket(PacketHeader.Synchronous)]
         public override void Receive(ServerClient client, byte[] bytes, PacketHeader header)
         {
-            PKT_Synchronous data = Serializer.ConvertBytesToObject<PKT_Synchronous>(bytes);
+            PKT_Synchronous packet = Serializer.ConvertBytesToObject<PKT_Synchronous>(bytes);
 
-            switch (data.CurrentStepMode)
+            switch (packet.CurrentStepMode)
             {
                 case PKT_Synchronous.StepMode.Ask:
-                    TryStartSynchronousSession(client, data);
+                    TryStartSynchronousSession(client, packet);
                     break;
 
                 case PKT_Synchronous.StepMode.Accept:
-                    AcceptSynchronousSession(client, data);
+                    AcceptSynchronousSession(client, packet);
                     break;
 
                 case PKT_Synchronous.StepMode.Reject:
-                    RejectSynchronousSession(client, data);
+                    RejectSynchronousSession(packet);
                     break;
 
                 case PKT_Synchronous.StepMode.Start:
-                    StartSynchronousSession(client, data);
+                    StartSynchronousSession(client);
                     break;
 
                 case PKT_Synchronous.StepMode.Action:
-                    RouteToManager(client, data, header);
+                    RouteToManager(client, packet, header);
                     break;
+                
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
-        private static void RouteToManager(ServerClient client, PKT_Synchronous data, PacketHeader header)
+        private static void RouteToManager(ServerClient client, PKT_Synchronous packet, PacketHeader header)
         {
-            client.Listener.EnqueuePacket(header, data);
-            ServerNetwork.GetClientFromID(client.GetData<FL_Player>().SynchronousClientID).Listener.EnqueuePacket(header, data);
+            client.Listener.EnqueuePacket(header, packet);
+            ServerNetwork.GetClientFromID(client.GetData<FL_Player>().SynchronousClientID).Listener.EnqueuePacket(header, packet);
         }
 
-        private static void TryStartSynchronousSession(ServerClient client, PKT_Synchronous data)
+        private static void TryStartSynchronousSession(ServerClient client, PKT_Synchronous packet)
         {
-            FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(data.ToTile);
+            FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(packet.ToTile);
             ServerClient toFind = ServerNetwork.GetConnectedClientFromUsername(settlement.Username);
 
             if (toFind == null) ResponseShortcutManager.SendUserUnavailablePacket(client);
             else
             {
-                PKT_Synchronous _ = new PKT_Synchronous()
-                {
-                    CurrentStepMode = PKT_Synchronous.StepMode.Ask,
-                    FromTile = PM_Settlements.GetSettlementFileFromUsername(client.GetData<FL_Player>().Username).Tile,
-                    Username = client.GetData<FL_Player>().Username,
-                    ToTile = data.ToTile,
-                    Party = data.Party,
-                    CurrentType = data.CurrentType
-                };
-
-                toFind.Listener.EnqueuePacket(PacketHeader.Synchronous, _);
+                packet.CurrentStepMode = PKT_Synchronous.StepMode.Ask;
+                packet.Username = client.GetData<FL_Player>().Username;
+                packet.FromTile = PM_Settlements.GetSettlementFileFromUsername(client.GetData<FL_Player>().Username).Tile;
+                toFind.Listener.EnqueuePacket(PacketHeader.Synchronous, packet);
             }
         }
 
-        private static void AcceptSynchronousSession(ServerClient client, PKT_Synchronous data)
+        private static void AcceptSynchronousSession(ServerClient client, PKT_Synchronous packet)
         {
-            FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(data.ToTile);
+            FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(packet.ToTile);
             ServerClient toFind = ServerNetwork.GetConnectedClientFromUsername(settlement.Username);
 
             client.GetData<FL_Player>().SynchronousClientID = toFind.ID;
             toFind.GetData<FL_Player>().SynchronousClientID = client.ID;
 
-            data.CurrentStepMode = PKT_Synchronous.StepMode.Accept;
-            toFind.Listener.EnqueuePacket(PacketHeader.Synchronous, data);
+            packet.CurrentStepMode = PKT_Synchronous.StepMode.Accept;
+            toFind.Listener.EnqueuePacket(PacketHeader.Synchronous, packet);
         }
 
-        private static void RejectSynchronousSession(ServerClient client, PKT_Synchronous data)
+        private static void RejectSynchronousSession(PKT_Synchronous packet)
         {
-            FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(data.ToTile);
+            FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(packet.ToTile);
             ServerClient toFind = ServerNetwork.GetConnectedClientFromUsername(settlement.Username);
 
             PKT_Synchronous _ = new PKT_Synchronous();
             _.CurrentStepMode = PKT_Synchronous.StepMode.Reject;
-            _.FromTile = data.FromTile;
-            _.ToTile = data.ToTile;
+            _.FromTile = packet.FromTile;
+            _.ToTile = packet.ToTile;
 
             toFind.Listener.EnqueuePacket(PacketHeader.Synchronous, _);
         }
 
-        private static void StartSynchronousSession(ServerClient client, PKT_Synchronous data)
+        private static void StartSynchronousSession(ServerClient client)
         {
-            PKT_Synchronous _ = new PKT_Synchronous() { CurrentStepMode = PKT_Synchronous.StepMode.Start };
-            ServerNetwork.GetClientFromID(client.GetData<FL_Player>().SynchronousClientID).Listener.EnqueuePacket(PacketHeader.Synchronous, _);
+            PKT_Synchronous packet = new PKT_Synchronous() { CurrentStepMode = PKT_Synchronous.StepMode.Start };
+            ServerNetwork.GetClientFromID(client.GetData<FL_Player>().SynchronousClientID).Listener.EnqueuePacket(PacketHeader.Synchronous, packet);
         }
     }
 }
